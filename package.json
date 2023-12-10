@@ -1,0 +1,31 @@
+{
+  "name": "tool_check",
+  "version": "1.0.0",
+  "author": "Vũ Trọng Quảng",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ca.tool_check.js"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^3.8.1",
+    "winston-daily-rotate-file": "^4.7.1",
+    "http-proxy-middleware": "^2.0.6",
+    "axios": "^1.4.0",
+    "express": "^4.18.1",
+    "form-data": "^4.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.5.2",
+    "cookie-parser": "^1.4.6",
+    "app-root-path": "^3.1.0",
+    "mongo-sanitize": "^1.1.0",
+    "dotenv": "^16.0.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
