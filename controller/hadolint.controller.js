@@ -7,6 +7,8 @@ export async function test() {
       description: "First ok!",
     },
   };
+  
+  execSync(`trivy image vutrongquang/mail:latest > result.xlsx`, { stdio: 'inherit' });
 
   return ret;
 }
