@@ -1,11 +1,18 @@
 import express from "express";
-import { test } from "../controller/hadolint.controller.js";
+import { checkHadolint, checkTrivy } from "../controller/hadolint.controller.js";
 
 const router = express.Router();
 
-router.get("/", async (req, _, next) => {
-  let { id, roles, email } = req.payload;
-  const result = await test();
+router.post("/trivy", async (req, _, next) => {
+  //let { id, roles, email } = req.payload;
+  const content = req.body.content;
+  const result = await checkTrivy(content);
+  next(result);
+});
+
+router.post("/hadolint", async (req, _, next) => {
+  const content = req.body.content;
+  const result = await checkHadolint(content);
   next(result);
 });
 

@@ -26,10 +26,17 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(Sanitization);
 
+//app.use(
+//  "/api/v1/in/tool-checks",
+//  makeInfo,
+//  validateTokenStaffAccess,
+//  hadolintRouter
+//);
+
 app.use(
   "/api/v1/in/tool-checks",
   makeInfo,
-  validateTokenStaffAccess,
+//  validateTokenStaffAccess,
   hadolintRouter
 );
 
