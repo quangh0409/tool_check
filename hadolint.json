@@ -1,0 +1,26 @@
+[
+  {
+    "code": "SC2225",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "error",
+    "line": 4,
+    "message": "This cp has no destination. Check the arguments."
+  },
+  {
+    "code": "DL3059",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "info",
+    "line": 5,
+    "message": "Multiple consecutive `RUN` instructions. Consider consolidation."
+  },
+  {
+    "code": "DL3025",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "warning",
+    "line": 8,
+    "message": "Use arguments JSON notation for CMD and ENTRYPOINT arguments"
+  }
+]

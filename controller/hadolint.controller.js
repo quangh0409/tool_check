@@ -11,28 +11,34 @@ const __dirname = dirname(__filename);
 const readFileAsync = promisify(fs.readFile);
 
 export async function checkTrivy(content) {
-
-  execSync(`../trivyfile.sh ${content}`, { stdio: 'inherit',shell: '/bin/bash' });
+  execSync(`../trivyfile.sh ${content}`, {
+    stdio: "inherit",
+    shell: "/bin/bash",
+  });
 
   const path = __dirname;
 
   let filePath;
 
-  filePath = resolve(path, "../..", "trivy.txt");
+  filePath = resolve(path, "../..", "trivy.json");
 
-  console.log("?? ~ file: hadolint.controller.js:14 ~ test ~ filePath:", filePath);
+  console.log(
+    "?? ~ file: hadolint.controller.js:14 ~ test ~ filePath:",
+    filePath
+  );
 
   try {
-    const content = await readFileAsync(filePath, "utf8");
-    
+    // const content = await readFileAsync(filePath, "utf8");
+
     // const markdownText = content.replace(/\n/g, '  \n');
-    
-    const result = convertToMarkdown(content);
+
+    const content = await readFileAsync(filePath);
+    const jsonData = JSON.parse(content);
 
     return {
       statusCode: OK,
       data: {
-        description: result,
+        description: jsonData,
       },
     };
   } catch (err) {
@@ -48,32 +54,35 @@ export async function checkTrivy(content) {
 }
 
 export async function checkHadolint(content) {
-
   const path = __dirname;
 
   let filePath;
 
   filePath = resolve(path, "../..", "Dockerfile");
-  
+
   fs.writeFileSync(filePath, content);
 
-  console.log("?? ~ file: hadolint.controller.js:14 ~ test ~ filePath:", filePath);
-  
-  execSync(`hadolint Dockerfile | tee ../hadolint.txt`, { stdio: 'inherit',shell: '/bin/bash' });
-  
-  filePath = resolve(path, "../..", "hadolint.txt");
+  execSync(`hadolint Dockerfile --format json | tee ../hadolint.json`, {
+    stdio: "inherit",
+    shell: "/bin/bash",
+  });
+
+  filePath = resolve(path, "../..", "hadolint.json");
+  // filePath = resolve(path, "../", "hadolint.json");
 
   try {
-    const content = await readFileAsync(filePath, "utf8");
+    // const content = await readFileAsync(filePath, "utf8");
+    const content = await readFileAsync(filePath);
+    const jsonData = JSON.parse(content);
+    // const rawData = fs.readFileSync(filePath);
 
     return {
       statusCode: OK,
       data: {
-        description: content,
+        description: jsonData,
       },
     };
   } catch (err) {
-
     return {
       statusCode: BAD_REQUEST,
       data: {
@@ -84,33 +93,38 @@ export async function checkHadolint(content) {
 }
 
 function convertToMarkdown(inputString) {
-    // Tách chu?i thành t?ng ph?n theo dòng
-    const lines = inputString.trim().split('\n');
-    let markdown = '';
+  // Tï¿½ch chu?i thï¿½nh t?ng ph?n theo dï¿½ng
+  const lines = inputString.trim().split("\n");
+  let markdown = "";
 
-    // Chuy?n d?i tiêu d? và b?ng
-    lines.forEach(line => {
-        if (line.startsWith('+') || line.startsWith('+') || line.startsWith('+') || line.startsWith('|')) {
-            // X? lý dòng b?ng
-            const cells = line.split('|').map(cell => cell.trim());
-            cells.shift();
-            cells.pop();
+  // Chuy?n d?i tiï¿½u d? vï¿½ b?ng
+  lines.forEach((line) => {
+    if (
+      line.startsWith("+") ||
+      line.startsWith("+") ||
+      line.startsWith("+") ||
+      line.startsWith("|")
+    ) {
+      // X? lï¿½ dï¿½ng b?ng
+      const cells = line.split("|").map((cell) => cell.trim());
+      cells.shift();
+      cells.pop();
 
-            if (cells.length > 0) {
-                if (markdown === '') {
-                    // X? lý dòng tiêu d? c?a b?ng
-                    markdown += '| ' + cells.join(' | ') + ' |\n';
-                    markdown += '| ' + cells.map(() => '---').join(' | ') + ' |\n';
-                } else {
-                    // X? lý dòng d? li?u c?a b?ng
-                    markdown += '| ' + cells.join(' | ') + ' |\n';
-                }
-            }
+      if (cells.length > 0) {
+        if (markdown === "") {
+          // X? lï¿½ dï¿½ng tiï¿½u d? c?a b?ng
+          markdown += "| " + cells.join(" | ") + " |\n";
+          markdown += "| " + cells.map(() => "---").join(" | ") + " |\n";
         } else {
-            // X? lý các dòng khác
-            markdown += line + '\n';
+          // X? lï¿½ dï¿½ng d? li?u c?a b?ng
+          markdown += "| " + cells.join(" | ") + " |\n";
         }
-    });
+      }
+    } else {
+      // X? lï¿½ cï¿½c dï¿½ng khï¿½c
+      markdown += line + "\n";
+    }
+  });
 
-    return markdown;
+  return markdown;
 }
